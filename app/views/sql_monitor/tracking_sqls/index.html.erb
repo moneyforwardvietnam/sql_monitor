@@ -1,0 +1,125 @@
+<% provide :title, "Tracking All Sql Queries" %>
+
+<h4 style="background: #ccc;padding: 10px;">Total Unique SQL Queries</h4>
+
+<div class="row">
+
+  <div class="col-sm-3">
+    <h5>Released versions</h5>
+    <div class="tab">
+      <% @versions.to_enum.with_index.reverse_each do |v, index| %>
+        <div>
+            <button class="tablinks <%= (v[:version] == @selectedVersion ? 'active' : '') %>" onclick="openVersion('<%= v[:version] %>')"><%= index + 1 %>. <%= v[:released_at] %> <%= v[:total].nil? ? "" : "(#{v[:total]})" %></button>
+            <a href="https://app.circleci.com/">CircleCI Workflow.</a>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col-sm-9">
+    <div>
+      <h5>Total: <%= @data.count %></h5>
+
+      <table class="table table-bordered h6" style="display: none;background: #d2f4f9;font-size: 12px;">
+          <tr>
+            <th>id</th>
+            <th>select_type</th>
+            <th>table</th>
+            <th>partitions</th>
+            <th>type</th>
+            <th>possible_keys</th>
+            <th>key</th>
+            <th>key_len</th>
+            <th>ref</th>
+            <th>rows</th>
+            <th>filtered</th>
+            <th>Extra</th>
+          </tr>
+          <tr id="explain_result">
+          </tr>
+      </table>
+
+      <table class="table table-bordered">
+          <tr>
+            <th>Count</th>
+            <th>Avg Time (ms)</th>
+            <th>SQL Query</th>
+            <th></th>
+            <th style="width: 30%">Source</th>
+          </tr>
+          <% @data.each do |d| %>
+            <tr>
+                <td><%= d[:count] %></td>
+                <td><%= d[:duration] %></td>
+                <td>
+                  <div id="<%= d[:sql_key] %>" class="data-sql" data-sql="<%= d[:sql] %>">
+                    <%= d[:sql] %>
+                  </div>
+                </td>
+                <td><input type="button" class="btn btn-info btn-sm" data-sql-key="<%= d[:sql_key] %>" value="Explain"></td>
+                <td><%=raw d[:source] %></td>
+              </tr>
+          <% end %>
+        </table>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  $(document).ready(function() {
+    String.format = function() {
+        var theString = arguments[0];
+        var args = arguments[1];
+        for (var i = 0; i < args.length; i++) {
+            var regEx = new RegExp("\\{" + (i) + "\\}", "gm");
+            theString = theString.replace(regEx, args[i]);
+        }
+        return theString;
+    }
+
+    $("input[type='button']").click(function() {
+      var divSql = $("div[id=" + $(this).data('sql-key') + "]");
+
+      if (divSql.children("input").length > 0) {
+        let params = [],
+            i = 0,
+            formated = divSql.data('sql').replace(/xxx/g, function(match) { return "{" + i++ + "}"; });
+
+        divSql.children("input").each(function () { params.push(this.value); });
+        // post to explain
+        $.ajax({
+         method: "POST",
+         headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+         url: "<%= main_app.rails_explain_sql_path %>",
+         data: { sql: String.format(formated, params) },
+         dataType: 'json',
+          success: function(data){
+            let values = '';
+            $.each(JSON.parse(data.result), function(i, val)
+            {
+              values += "<td>" + val + "</td>";
+            });
+            $("#explain_result").parents("table").show();
+            $("#explain_result").replaceWith("<tr id=\"explain_result\">" + values + "</tr>");
+          },
+          error: function(err){
+            alert(err.responseText);
+          }
+       });
+      } else {
+        let replaced = divSql.data('sql').replace(/xxx/g, function(match) {
+          return "<input style=\"width: 10%;display:inline;background: #ffffe6;\" type=\"text\" class=\"form-control\" />";
+        });
+        divSql.html(replaced);
+      }
+    });
+
+
+  });
+
+    function openVersion(version) {
+      location.href = "<%= main_app.rails_tracking_sqls_path %>" + "?version=" + version;
+    }
+</script>
