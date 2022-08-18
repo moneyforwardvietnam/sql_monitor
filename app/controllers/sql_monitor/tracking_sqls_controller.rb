@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'redis'
 require 'json'
 
 module SqlMonitor
@@ -8,16 +7,15 @@ module SqlMonitor
     layout "base"
 
     def index
-      @redis = Redis.new(host: "localhost", db: 10)
-      @versions = @redis.get('all_versions')
+      @versions = SqlMonitor.handler.redis.get('all_versions')
       if @versions.nil? || @versions.empty?
         @versions = []
       else
-        @versions = JSON.parse(@redis.get('all_versions'), {:symbolize_names => true})
+        @versions = JSON.parse(SqlMonitor.handler.redis.get('all_versions'), {:symbolize_names => true})
       end
 
       @versions.each do |v|
-        v[:total] = @redis.get(v[:version] + "_total")
+        v[:total] = SqlMonitor.handler.redis.get(v[:version] + "_total")
       end
 
       @data = []
@@ -25,8 +23,8 @@ module SqlMonitor
       if params[:version]
         data = []
         @selectedVersion = params[:version]
-        @redis.scan_each(match: @selectedVersion + ":*") do |v|
-          data << JSON.parse(@redis.mGet(v).first, {:symbolize_names => true}).merge({sql_key: v.split(':')[1]})
+        SqlMonitor.handler.redis.scan_each(match: @selectedVersion + ":*") do |v|
+          data << JSON.parse(SqlMonitor.handler.redis.mGet(v).first, {:symbolize_names => true}).merge({sql_key: v.split(':')[1]})
         end
         @data = format_data(sort_data(data, 'count'))
       end
@@ -54,7 +52,6 @@ module SqlMonitor
           source: row[:source].uniq.join("<br/>")
         })
       end
-      puts formatedData
       formatedData
     end
 

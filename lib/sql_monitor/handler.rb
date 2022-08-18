@@ -13,10 +13,16 @@ module SqlMonitor
       @config = config
       @started_at = Time.now.to_s
       @data = {} # {key: {sql:, count:, duration, source: []}, ...}
-      @redis = Redis.new(host: "localhost", db: 10)
-      @cachedVerKey = (0...50).map { ('a'..'z').to_a[rand(26)] }.join
+    end
 
+    def setup
+      @redis = Redis.new(host: SqlMonitor.configuration.redis_host, db: SqlMonitor.configuration.redis_db)
+      @cachedVerKey = SqlMonitor.configuration.release_version
       set_version
+    end
+
+    def redis
+      @redis
     end
 
     def set_version

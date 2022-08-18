@@ -1,27 +1,36 @@
-require_relative 'lib/sql_monitor/version'
+# -*- encoding: utf-8 -*-
+# stub: sql_monitor 0.1.0 ruby lib
 
-Gem::Specification.new do |spec|
-  spec.name          = "sql_monitor"
-  spec.version       = SqlMonitor::VERSION
-  spec.authors       = ["Tade"]
-  spec.email         = ["phan.minh.trung@moneyforward.vn"]
+Gem::Specification.new do |s|
+  s.name = "sql_monitor".freeze
+  s.version = "0.1.0"
 
-  spec.summary       = 'SQL Query Monitor'
-  spec.description   = 'Track and analyze sql queries of your rails application'
-  spec.homepage      = 'https://github.com/moneyforwardvietnam/sql_monitor'
-  spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
+  s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
+  s.require_paths = ["lib".freeze]
+  s.authors = ["Tade".freeze]
+  s.date = "2022-08-18"
+  s.description = "Track and analyze sql queries of your rails application".freeze
+  s.email = ["phan.minh.trung@moneyforward.vn".freeze]
+  s.files = [".gitignore".freeze, ".rspec".freeze, ".travis.yml".freeze, "CODE_OF_CONDUCT.md".freeze, "Gemfile".freeze, "LICENSE.txt".freeze, "README.md".freeze, "Rakefile".freeze, "app/controllers/sql_monitor/explain_sql_controller.rb".freeze, "app/controllers/sql_monitor/tracking_sqls_controller.rb".freeze, "app/views/layouts/base.html.erb".freeze, "app/views/sql_monitor/tracking_sqls/index.html.erb".freeze, "bin/console".freeze, "bin/setup".freeze, "config/routes.rb".freeze, "lib/sql_monitor.rb".freeze, "lib/sql_monitor/config.rb".freeze, "lib/sql_monitor/engine.rb".freeze, "lib/sql_monitor/handler.rb".freeze, "lib/sql_monitor/railtie.rb".freeze, "lib/sql_monitor/version.rb".freeze, "sql_monitor.gemspec".freeze]
+  s.homepage = "https://github.com/moneyforwardvietnam/sql_monitor".freeze
+  s.licenses = ["MIT".freeze]
+  s.required_ruby_version = Gem::Requirement.new(">= 2.3.0".freeze)
+  s.rubygems_version = "3.1.4".freeze
+  s.summary = "SQL Query Monitor".freeze
 
-  # Specify which files should be added to the gem when it is released.
-  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
-  spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
-    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  s.installed_by_version = "3.1.4" if s.respond_to? :installed_by_version
+
+  if s.respond_to? :specification_version then
+    s.specification_version = 4
   end
-  spec.bindir        = "bin"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  spec.require_paths = ["lib"]
 
-  spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'activesupport', '>= 3.0.0'
+  if s.respond_to? :add_runtime_dependency then
+    s.add_development_dependency(%q<bundler>.freeze, [">= 0"])
+    s.add_development_dependency(%q<rake>.freeze, [">= 0"])
+    s.add_development_dependency(%q<activesupport>.freeze, [">= 3.0.0"])
+  else
+    s.add_dependency(%q<bundler>.freeze, [">= 0"])
+    s.add_dependency(%q<rake>.freeze, [">= 0"])
+    s.add_dependency(%q<activesupport>.freeze, [">= 3.0.0"])
+  end
 end
