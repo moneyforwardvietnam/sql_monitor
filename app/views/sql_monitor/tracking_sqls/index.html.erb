@@ -10,7 +10,7 @@
       <% @versions.to_enum.with_index.reverse_each do |v, index| %>
         <div>
             <button class="tablinks <%= (v[:version] == @selectedVersion ? 'active' : '') %>" onclick="openVersion('<%= v[:version] %>')"><%= index + 1 %>. <%= v[:released_at] %> <%= v[:total].nil? ? "" : "(#{v[:total]})" %></button>
-            <a href="https://app.circleci.com/">CircleCI Workflow.</a>
+            <a href="https://app.circleci.com/pipelines/workflows/<%= v[:version] %>" target="_blank">CircleCI Workflow.</a>
         </div>
       <% end %>
     </div>

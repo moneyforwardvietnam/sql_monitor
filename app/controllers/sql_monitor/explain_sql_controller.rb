@@ -2,9 +2,16 @@
 
 module SqlMonitor
   class ExplainSqlController < ActionController::Base
-    protect_from_forgery with: :null_session
+
+    def not_found
+      respond_to do |format|
+        format.any  { head :not_found }
+      end
+    end
 
     def index
+      not_found if Rails.env.production?
+
       data = ActiveRecord::Base.connection.execute("EXPLAIN #{params[:sql]}").first
       render json: {
         result: data.to_json

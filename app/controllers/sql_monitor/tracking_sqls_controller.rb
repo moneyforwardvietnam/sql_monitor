@@ -6,7 +6,15 @@ module SqlMonitor
   class TrackingSqlsController < ActionController::Base
     layout "base"
 
+    def not_found
+      respond_to do |format|
+        format.any  { head :not_found }
+      end
+    end
+
     def index
+      not_found if Rails.env.production?
+
       @versions = SqlMonitor.handler.redis.get('all_versions')
       if @versions.nil? || @versions.empty?
         @versions = []
