@@ -30,11 +30,9 @@ To change the configuration of health_check, create a file `config/initializers/
 # frozen_string_literal: true
 
 SqlMonitor::Config.configure do |config|
-  # redis url
+  config.enabled = true # default is false
   config.redis_host = ENV.fetch('REDIS_HOST', 'redis://localhost/1')
-  # redis db index
   config.redis_db = 11
-  # circleci workflow id released
   config.release_version = ENV.fetch('CIRCLE_WORKFLOW_ID', nil)
 end
 ```

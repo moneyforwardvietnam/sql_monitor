@@ -13,7 +13,7 @@ module SqlMonitor
     end
 
     def index
-      not_found if Rails.env.production?
+      return not_found if Rails.env.production? || SqlMonitor.handler.nil?
 
       @versions = SqlMonitor.handler.redis.get('all_versions')
       if @versions.nil? || @versions.empty?

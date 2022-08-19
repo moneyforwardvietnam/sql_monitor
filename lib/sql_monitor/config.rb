@@ -14,7 +14,7 @@ module SqlMonitor
         self.release_version = release_version.nil? ? (0...50).map { ('a'..'z').to_a[rand(26)] }.join : release_version
         self.save_at_exit = save_at_exit.nil? ? false : save_at_exit
 
-        self.enabled = enabled.nil? ? true : enabled
+        self.enabled = enabled.nil? ? false : enabled
         self.tracked_paths ||= %w(app lib)
         self.tracked_sql_command ||= %w(SELECT INSERT UPDATE DELETE)
         self.output_path ||= begin

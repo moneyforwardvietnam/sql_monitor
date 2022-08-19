@@ -10,7 +10,7 @@ module SqlMonitor
     end
 
     def index
-      not_found if Rails.env.production?
+      return not_found if Rails.env.production?
 
       data = ActiveRecord::Base.connection.execute("EXPLAIN #{params[:sql]}").first
       render json: {

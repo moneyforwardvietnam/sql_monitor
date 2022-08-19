@@ -16,6 +16,8 @@ module SqlMonitor
   def self.setup!
     # puts "2. setup sql_monitor"
     config = SqlMonitor::Config.apply_defaults
+    return unless config.enabled
+
     @handler = SqlMonitor::Handler.new(config)
     @handler.subscribe
     at_exit { @handler.save } if config.save_at_exit
