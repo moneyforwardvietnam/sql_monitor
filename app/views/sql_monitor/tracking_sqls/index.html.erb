@@ -1,11 +1,11 @@
 <% provide :title, "Tracking All Sql Queries" %>
 
-<h4 style="background: #ccc;padding: 10px;">Total Unique SQL Queries</h4>
+<h4 class="text-center" style="background: #ccc;padding: 10px;">Total Unique SQL Queries</h4>
 
 <div class="row">
 
   <div class="col-sm-3">
-    <h5>Released versions</h5>
+    <h5><i class='fas fa-angle-double-right'></i>&nbsp;Released versions</h5>
     <div class="tab">
       <% @versions.to_enum.with_index.reverse_each do |v, index| %>
         <div>
@@ -18,7 +18,7 @@
 
   <div class="col-sm-9">
     <div>
-      <h5>Total: <%= @data.count %></h5>
+      <h5><i class='fas fa-angle-double-right'></i>&nbsp;Total: <%= @data.count %>&nbsp;queries</h5>
 
       <table class="table table-bordered h6" style="display: none;background: #ccc;font-size: 12px;">
           <tr>
@@ -67,6 +67,9 @@
 
 </div>
 
+
+<div class="float-right" style="display: inline-block;margin-bottom: 15px;padding-bottom: 5px;font-size: 12px;">
+  <a href="https://github.com/moneyforwardvietnam/sql_monitor" target="_blank">Copyright 2022-2024</a> by MFV SRE</div>
 <script>
   $(document).ready(function() {
     String.format = function() {
@@ -115,8 +118,6 @@
         divSql.html(replaced);
       }
     });
-
-
   });
 
     function openVersion(version) {

@@ -27,12 +27,14 @@ Or install it yourself as:
 To change the configuration of health_check, create a file `config/initializers/sql_monitor.rb` and add a configuration block like:
 
 ```ruby
-SqlMonitor.configure do |config|
+# frozen_string_literal: true
 
-  config.redis_host = ENV.fetch('REDIS_HOST', 'redis://localhost')
-
-  config.redis_db = 20
-
+SqlMonitor::Config.configure do |config|
+  # redis url
+  config.redis_host = ENV.fetch('REDIS_HOST', 'redis://localhost/1')
+  # redis db index
+  config.redis_db = 11
+  # circleci workflow id released
   config.release_version = ENV.fetch('CIRCLE_WORKFLOW_ID', nil)
 end
 ```

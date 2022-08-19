@@ -7,22 +7,15 @@ require "pry"
 #
 module SqlMonitor
   class Handler
-    attr_reader :data, :cachedVerKey
+    attr_reader :data, :cachedVerKey, :redis
 
     def initialize(config)
       @config = config
       @started_at = Time.now.to_s
       @data = {} # {key: {sql:, count:, duration, source: []}, ...}
-    end
-
-    def setup
-      @redis = Redis.new(host: SqlMonitor.configuration.redis_host, db: SqlMonitor.configuration.redis_db)
-      @cachedVerKey = SqlMonitor.configuration.release_version
+      @redis = Redis.new(host: @config.redis_host, db: @config.redis_db)
+      @cachedVerKey = @config.release_version
       set_version
-    end
-
-    def redis
-      @redis
     end
 
     def set_version
