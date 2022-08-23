@@ -121,8 +121,6 @@ module SqlMonitor
 
       # store new data
       @redis.set(@cachedVerKey + ':' + key, JSON.dump(@data[key]))
-      # total sql keys
-      @redis.set(@cachedVerKey + '_total', @data.keys.count)
 
       @data
     end

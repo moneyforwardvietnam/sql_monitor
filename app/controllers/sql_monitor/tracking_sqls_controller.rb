@@ -22,10 +22,6 @@ module SqlMonitor
         @versions = JSON.parse(SqlMonitor.handler.redis.get('all_versions'), {:symbolize_names => true})
       end
 
-      @versions.each do |v|
-        v[:total] = SqlMonitor.handler.redis.get(v[:version] + "_total")
-      end
-
       @data = []
       @selectedVersion = ''
       if params[:version]
