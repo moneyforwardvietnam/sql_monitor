@@ -45,15 +45,27 @@ module SqlMonitor
       end
     end
 
+    def format_source(s)
+      values = s.split(':')
+      return [values[0] + ":" + values[1], s] if SqlMonitor.handler.config.repo_url.nil?
+
+      [SqlMonitor.handler.config.repo_url % {file: values[0], line: values[1]}, s]
+    end
+
     def format_data(sorted_data)
       formatedData = [];
       sorted_data.each do |row|
+        sources = []
+        row[:source].uniq.each do |s|
+           sources << format_source(s)
+        end
+
         formatedData.push({
           sql_key: row[:sql_key],
           count: row[:count].to_s,
           duration: row[:duration].to_f / row[:count],
           sql: row[:sql],
-          source: row[:source].uniq.join("<br/>")
+          sources: sources
         })
       end
       formatedData

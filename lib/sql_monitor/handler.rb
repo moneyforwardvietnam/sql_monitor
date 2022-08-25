@@ -7,7 +7,7 @@ require "pry"
 #
 module SqlMonitor
   class Handler
-    attr_reader :data, :cachedVerKey, :redis
+    attr_reader :data, :cachedVerKey, :redis, :config
 
     def initialize(config)
       @config = config

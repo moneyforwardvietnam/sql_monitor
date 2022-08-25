@@ -57,7 +57,11 @@
                   </div>
                 </td>
                 <td><input type="button" class="btn btn-info btn-sm" data-sql-key="<%= d[:sql_key] %>" value="Explain"></td>
-                <td><%=raw d[:source] %></td>
+                <td>
+                  <% d[:sources].each_with_index do |s, idx| %>
+                    <%= idx + 1 %>.&nbsp;<a href="<%= s[0] %>" target="_blank"><%= s[1] %></a>
+                  <% end %>
+                </td>
               </tr>
           <% end %>
         </table>
